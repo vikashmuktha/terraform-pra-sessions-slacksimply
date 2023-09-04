@@ -14,7 +14,7 @@ terraform {
 # Provider Block
 provider "aws" {  # The lprovider will match under the terraform block -> required_providers -> aws {This aws will match}
   #profile = "default" 
-  region = "eu-west-3"
+  region = "eu-west-3" # Here select the region, i can select Europe-Paris region. 
 }
 
 /*
