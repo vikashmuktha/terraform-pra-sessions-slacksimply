@@ -9,3 +9,4 @@ resource "aws_instance" "my-demo-ec2" {  # First block label we can select by us
   }
 
 }
+
