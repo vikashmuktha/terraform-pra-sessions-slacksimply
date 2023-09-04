@@ -6,7 +6,7 @@
 
 output "instance_publicip" {
   description = "EC2 instance public ip"
-  value = aws_instance.my-demo-ec2.public_ip # We can pass attributes also
+  value = aws_instance.Demo-EC2-Instance.public_ip # value we can take c5 session under resources block, We can pass attributes also
 
 }
 
@@ -15,6 +15,5 @@ output "instance_publicip" {
 
 output "instance_publicdns" {
   description = "EC2 instance public dns"
-  value = aws_instance.my-demo-ec2.public_dns # We can pass attributes also
-
+  value = aws_instance.Demo-EC2-Instance.public_dns # value we can take c5 session under resources block, We can pass attributes also
 }

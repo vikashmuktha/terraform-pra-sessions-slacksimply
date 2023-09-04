@@ -2,13 +2,14 @@
 # Terraform documentation: "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami"
 #So here we can follow above link Main block is data and Resource type is aws_ami's.
 
-#This for ami under c5 session we can pass the : data.aws_ami.amzlinux2.id
+# This for ami under c5 session we can pass the : data.aws_ami.amzlinux2.id
+# data.aws_ami.amzlinux2.id
+
 
 data "aws_ami" "amzlinux2" {
-  #executable_users = ["self"]
-  most_recent      = true #It will look the most recent one of ami's
-  #name_regex       = "^myami-\\d{3}"
-  owners           = ["aws"]
+  
+  most_recent      = true   #It will look the most recent one of ami's
+  owners           = ["amazon"]  #Definetly you can the owner i am blindy given aws after trouble shoot it will replace it with amazon
 
   filter {
     name   = "name"
