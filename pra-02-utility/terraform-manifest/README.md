@@ -1,5 +1,8 @@
-Terraform Small Utility Project
+**Terraform Small Utility Project
+**
+
 Step-01: Introduction
+
 Current Problem:
 We are not able to create EC2 Instances in all the subnets of our VPC which are spread across all availability zones in that region
 Approach to a Solution:
@@ -9,16 +12,21 @@ Why utility project?
 In Terraform, we should not go and try things directly in large code base.
 First try your requirements in small chunks and integrate that to main code base.
 We are going to do the same now.
+
 Step-02: c1-versions.tf
+
 Hard-coded the region as we are not going to use any variables.tf in this utility project
 # Provider Block
 provider "aws" {
   region  = "us-east-1"
 }
+
 Step-03: c2-v1-get-instancetype-supported-per-az-in-a-region.tf
+
 We are first going to explore the datasource and it outputs
 # Determine which Availability Zones support your instance type
 aws ec2 describe-instance-type-offerings --location-type availability-zone  --filters Name=instance-type,Values=t3.micro --region us-east-1 --output table
+
 Step-03-01: Review / Create the datasource and its output
 # Datasource
 data "aws_ec2_instance_type_offerings" "my_ins_type1" {
@@ -39,6 +47,7 @@ data "aws_ec2_instance_type_offerings" "my_ins_type1" {
 output "output_v1_1" {
  value = data.aws_ec2_instance_type_offerings.my_ins_type1.instance_types
 }
+
 Step-03-02: Execute Terraform Commands
 # Terraform Initialize
 terraform init
@@ -66,8 +75,11 @@ Observation:
 1. Output should have the instance value empty `[]` when `values = ["us-east-1e"]` in location filter
 # Sample Output
 output_v1_1 = toset([])
+
 Step-04: c2-v2-get-instancetype-supported-per-az-in-a-region.tf
+
 Using for_each create multiple instances of datasource and loop it with hard-coded availability zones in for_each
+
 Step-04-01: Review / Create the datasource and its output with for_each
 # Check if that respective Instance Type is supported in that Specific Region in list of availability Zones
 # Get the List of Availability Zones in a Particular region where that respective Instance Type is supported
@@ -98,6 +110,7 @@ output "output_v2_2" {
  value = { for az, details in data.aws_ec2_instance_type_offerings.my_ins_type2 :
   az => details.instance_types }   
 }
+
 Step-04-02: Execute Terraform Commands
 # Terraform Plan
 terraform plan
@@ -116,7 +129,9 @@ output_v2_2 = {
   ])
   "us-east-1e" = toset([])
 }
+
 Step-05: c2-v3-get-instancetype-supported-per-az-in-a-region.tf
+
 Step-05-01: Add new datasource aws_availability_zones
 Get List of Availability Zones in a Specific Region
 # Get List of Availability Zones in a Specific Region
@@ -127,6 +142,7 @@ data "aws_availability_zones" "my_azones" {
     values = ["opt-in-not-required"]
   }
 }
+
 Step-05-02: Update for_each with new datasource
 # Check if that respective Instance Type is supported in that Specific Region in list of availability Zones
 # Get the List of Availability Zones in a Particular region where that respective Instance Type is supported
@@ -142,7 +158,9 @@ for_each=toset(data.aws_availability_zones.my_azones.names)
   }
   location_type = "availability-zone"
 }
+
 Step-05-03: Implement Incremental Outputs till we reach what is required
+
 # Basic Output: All Availability Zones mapped to Supported Instance Types
 output "output_v3_1" {
  value = { for az, details in data.aws_ec2_instance_type_offerings.my_ins_type :
@@ -167,7 +185,9 @@ output "output_v3_4" {
   value = keys({ for az, details in data.aws_ec2_instance_type_offerings.my_ins_type :
   az => details.instance_types if length(details.instance_types) != 0 })[0]
 }
+
 Step-05-04: Execute Terraform Commands
+
 # Terraform Plan
 terraform plan
 terraform appy -auto-approve
@@ -217,10 +237,20 @@ output_v3_3 = [
   "us-east-1f",
 ]
 output_v3_4 = "us-east-1a"
+
 Step-06: Clean-Up
+
 # Terraform Destroy
 terraform destroy -auto-approve
 
 # Delete Files
 rm -rf .terraform*
 rm -rf terraform.tfstate*
+
+
+
+
+
+
+
+
