@@ -8,7 +8,7 @@
     3) key name: we can create a key pair for persent working directory.
     4) security groups: under resource block we can pass the resource types with attributes.
         for security_group attributes we can refer: "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group#attribute-reference"
-    5) user data: we can pass the perfect path of the file
+    5) user data: we can pass the perfect path of the file: https://developer.hashicorp.com/terraform/language/functions/file
     6) Tags: We can pass the key value.
 */
 
